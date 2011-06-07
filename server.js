@@ -25,7 +25,7 @@ jerk( function( j ) {
   });
 
   // If the user is requesting the Twitter search feature
-  j.watch_for( /^(.+) :twitter$/, function( message ) {
+  j.watch_for( /^(.+) :twitterSearch$/, function( message ) {
 
     /*
      * On each request, if it takes longer than 20 seconds, end the response
@@ -42,7 +42,14 @@ jerk( function( j ) {
      */
     Twitter.EventEmitter.once("tweets", function(tweets){
      // Send the tweets structure back to the client
-     message.say(JSON.stringify(tweets));
+     for (var tweet in tweets.results) {
+       console.log(tweets.results[tweet]);
+
+       var user = tweets.results[tweet].from_user,
+           text = tweets.results[tweet].text;
+       message.say('<' + user + '>: ' + text);
+     }
+     //message.say(JSON.stringify(tweets));
 
      // Stop the timeout function from completing (see below)
      clearTimeout(timeout);
